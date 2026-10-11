@@ -1,6 +1,6 @@
 // Le borse di Mamma - service worker
 // Quando aggiorni l'app, cambia il numero qui sotto (v1 -> v2) cosi' i telefoni scaricano la nuova versione.
-const CACHE = 'borse-v1';
+const CACHE = 'borse-v2';
 const FILES = ['./', 'index.html', 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', e => {

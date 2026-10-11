@@ -12,7 +12,7 @@
 <title>Le borse della mamma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@700&display=swap">
 <style>
 /* Layout: one calm column, big tap targets, tab bar fixed at the bottom; the "stitch" dashed line is the only ornament. */
 :root{
@@ -24,6 +24,8 @@
   --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --f-body:"Atkinson Hyperlegible", "Segoe UI", Verdana, system-ui, sans-serif;
   --r:16px;
+  --frame:#6B4433; --frame-2:#8A5C47; --paper:#FFF8E8; --paper-line:#D9C8A6; --paper-ink:#8E2F5E;
+  --f-hand:"Caveat", "Segoe Print", "Comic Sans MS", cursive;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#18141B; --surface:#221D26; --surface-2:#2D2732; --line:#3B3341;
@@ -140,8 +142,8 @@ th{color:var(--muted);font-weight:700;font-size:.85rem}
 
 /* tabs */
 .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:10}
-.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:62px;border-radius:12px;font-size:.85rem;font-weight:700;color:var(--muted)}
+.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:62px;border-radius:12px;font-size:.78rem;padding:0;font-weight:700;color:var(--muted)}
 .tabs button svg{width:26px;height:26px}
 .tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 
@@ -189,8 +191,26 @@ html{padding-top:env(safe-area-inset-top,0px)}
 body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
-.sync{font-size:.9rem;color:var(--muted);margin:8px 0 0}
-.sync.ok{color:var(--good)} .sync.err{color:var(--danger)}
+/* vetrina: wooden shop window, paper price tags */
+.window{margin-top:16px;border-radius:14px;padding:10px;background:linear-gradient(135deg,var(--frame-2),var(--frame));box-shadow:inset 0 0 0 3px rgba(0,0,0,.18)}
+.vetrina{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,128px),1fr));gap:18px 12px;background:var(--surface-2);border-radius:6px;padding:12px;position:relative;overflow:hidden}
+.vetrina::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,0) 28%,rgba(255,255,255,0) 60%,rgba(255,255,255,.12) 70%,rgba(255,255,255,0) 78%)}
+.vcard{position:relative;border:0;background:none;padding:0;text-align:left;display:flex;flex-direction:column;gap:8px;min-width:0}
+.vimg{display:block;width:100%;aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:var(--surface);box-shadow:0 6px 14px rgba(0,0,0,.18);max-width:100%}
+.vimg img{width:100%;height:100%;object-fit:cover;display:block}
+.nofoto{display:grid;place-items:center;height:100%;text-align:center;color:var(--muted);font-size:.9rem;padding:8px;border:2px dashed var(--line);border-radius:6px}
+.vname{font-weight:700;font-size:.98rem;line-height:1.2;color:var(--ink)}
+.tag{position:absolute;right:-4px;top:calc(min(100%,100%) * 0);margin-top:58%;transform:rotate(-7deg);background:var(--paper);color:var(--paper-ink);border:1px solid var(--paper-line);padding:4px 12px 2px 22px;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%);box-shadow:0 3px 6px rgba(0,0,0,.2);z-index:1}
+.tag::before{content:"";position:absolute;left:9px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--paper-line)}
+.tp{font-family:var(--f-hand);font-weight:700;font-size:1.65rem;line-height:1;white-space:nowrap}
+.vbig{position:relative;margin-bottom:18px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--frame-2),var(--frame))}
+.vbig .vimg{aspect-ratio:1/1;border-radius:6px}
+.vbig.small .vimg{aspect-ratio:4/3}
+.vbig .tag.big{margin:0;top:auto;bottom:26px;right:4px;padding:6px 18px 4px 30px;clip-path:polygon(20px 0,100% 0,100% 100%,20px 100%,0 50%)}
+.vbig .tag.big::before{left:13px;width:9px;height:9px;margin-top:-4.5px;background:var(--bg)}
+.vbig .tag.big .tp{font-size:2.6rem}
+.remind{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--warn-soft);color:var(--warn);border-radius:14px;padding:12px 14px;margin-top:16px;font-weight:700}
+.btn[disabled]{opacity:.6}
 </style>
 </head>
 <body>
@@ -207,7 +227,8 @@ img{max-width:100%}
 </div>
 
 <nav class="tabs" aria-label="Sezioni"><div class="in">
-  <button data-tab="borse" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.2 10.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 9a3.5 4 0 0 1 7 0"/></svg>Borse</button>
+  <button data-tab="vetrina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9c0 1.5 1.3 2.5 3 2.5S9 10.5 9 9c0 1.5 1.3 2.5 3 2.5s3-1 3-2.5c0 1.5 1.3 2.5 3 2.5s3-1 3-2.5"/><path d="M5 11.5V20h14v-8.5"/><path d="M10 20v-5h4v5"/></svg>Vetrina</button>
+  <button data-tab="borse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.2 10.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 9a3.5 4 0 0 1 7 0"/></svg>Borse</button>
   <button data-tab="materiali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="12" r="7"/><path d="M5.5 9.5c4 .5 8 0 11-2M5 14c5 1 9 0 12-3M8 18c3 0 7-2 9-5M18 17c2 1 3 2 3 4"/></svg>Materiali</button>
   <button data-tab="vendite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 12 20l-8-8V4h8z"/><circle cx="8" cy="8" r="1.5"/></svg>Vendite</button>
   <button data-tab="conti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Conti</button>
@@ -272,67 +293,50 @@ const DEF={
 const COLLS=['materiali','modelli','lavori','spese'];
 const S={materiali:[],modelli:[],lavori:[],spese:[],imp:{nome:'Le borse della mamma',tariffa:6}};
 let mode='local';
-const UI={tab:'borse',vend:'pronte',per:'anno',table:false};
-const LK='borse-uncinetto-v1',SK='borse-sync-url';
-let updatedAt=0,syncUrl='',syncState={t:'',cls:''};
+const UI={tab:'vetrina',vend:'pronte',per:'anno',table:false};
+const LK='borse-uncinetto-v1';
+let updatedAt=0,copie=[],loaded=false;
 try{const t=sessionStorage.getItem('bm-tab');if(t)UI.tab=t}catch(e){}
-try{syncUrl=localStorage.getItem(SK)||''}catch(e){}
 
-function loadLocal(){
-  let d=null;try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}
-  if(!d)d={materiali:DEF.materiali,modelli:DEF.modelli,lavori:[],spese:[],imp:S.imp,updatedAt:0};
-  apply(d);writeLocal();
-}
+/* ---------- IndexedDB: dati principali + copie automatiche ---------- */
+const IDB=(()=>{
+  let p=null;
+  function open(){if(!p)p=new Promise((res,rej)=>{if(!window.indexedDB)return rej(new Error('no idb'));const r=indexedDB.open('borse-della-mamma',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});return p}
+  const tx=(m,f)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction('kv',m);const rq=f(t.objectStore('kv'));t.oncomplete=()=>res(rq?rq.result:undefined);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)}));
+  return {get:k=>tx('readonly',s=>s.get(k)),set:(k,v)=>tx('readwrite',s=>s.put(v,k)),del:k=>tx('readwrite',s=>s.delete(k)),keys:()=>tx('readonly',s=>s.getAllKeys())};
+})();
+
 function apply(d){
   COLLS.forEach(c=>S[c]=Array.isArray(d[c])?d[c]:[]);
   if(d.imp)S.imp=Object.assign({},S.imp,d.imp);
   updatedAt=num(d.updatedAt);
 }
-function snapshot(noPhotos){
-  const mods=noPhotos?S.modelli.map(m=>Object.assign({},m,{foto:''})):S.modelli;
-  return {materiali:S.materiali,modelli:mods,lavori:S.lavori,spese:S.spese,imp:S.imp,updatedAt};
-}
-function writeLocal(){
-  try{localStorage.setItem(LK,JSON.stringify(snapshot(false)))}
-  catch(e){toast('Memoria del telefono piena: togli qualche foto')}
-}
-function saveLocal(){updatedAt=Date.now();writeLocal();schedPush()}
+function snapshot(){return {materiali:S.materiali,modelli:S.modelli,lavori:S.lavori,spese:S.spese,imp:S.imp,updatedAt}}
 
-/* ---------- Google Sheet sync (optional) ---------- */
-function setSync(t,cls){syncState={t,cls:cls||''};const el=document.getElementById('syncLine');if(el){el.textContent=t;el.className='sync '+(cls||'')}}
-const ora=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())};
-async function pull(){
-  if(!syncUrl)return;
-  if(!navigator.onLine){setSync('Senza internet: aggiorno appena torna la rete.','err');return}
-  try{
-    const r=await fetch(syncUrl+(syncUrl.includes('?')?'&':'?')+'azione=leggi',{redirect:'follow'});
-    const j=await r.json();
-    if(j&&j.dati&&num(j.dati.updatedAt)>updatedAt){
-      const foto={};S.modelli.forEach(m=>{if(m.foto)foto[m.id]=m.foto});
-      apply(j.dati);S.modelli.forEach(m=>{if(!m.foto&&foto[m.id])m.foto=foto[m.id]});
-      writeLocal();if($('#sheetWrap').hidden)render();
-    }else if(j&&(!j.dati||num(j.dati.updatedAt)<updatedAt)){await push();return}
-    setSync('Collegato al foglio · aggiornato alle '+ora(),'ok');
-  }catch(e){setSync('Non riesco a raggiungere il foglio. Riprovo più tardi.','err')}
+async function loadState(){
+  let d=null;
+  try{d=await IDB.get('stato')}catch(e){}
+  if(!d){try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}}
+  if(!d)d={materiali:DEF.materiali,modelli:DEF.modelli,lavori:[],spese:[],imp:S.imp,updatedAt:0};
+  apply(d);await writeState();await refreshCopie();
 }
-let pushT=0,pushing=false,again=false;
-function schedPush(){if(!syncUrl)return;clearTimeout(pushT);pushT=setTimeout(push,1500)}
-async function push(){
-  if(!syncUrl)return;if(pushing){again=true;return}
-  if(!navigator.onLine){setSync('Senza internet: salvo sul foglio appena torna la rete.','err');return}
-  pushing=true;
-  try{
-    if(!updatedAt){updatedAt=Date.now();writeLocal()}
-    const r=await fetch(syncUrl,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({azione:'scrivi',dati:snapshot(true)})});
-    const j=await r.json();
-    if(!j||!j.ok)throw 0;
-    setSync('Collegato al foglio · salvato alle '+ora(),'ok');
-    if(j.vecchio){pushing=false;await pull();return}
-  }catch(e){setSync('Salvataggio sul foglio non riuscito. Riprovo più tardi.','err')}
-  pushing=false;if(again){again=false;push()}
+async function writeState(){
+  const snap=snapshot();
+  try{await IDB.set('stato',snap);try{localStorage.removeItem(LK)}catch(e){}}
+  catch(e){try{localStorage.setItem(LK,JSON.stringify(snap))}catch(x){toast('Memoria del telefono piena: togli qualche foto')}}
 }
-window.addEventListener('online',()=>{pull()});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pull()});
+async function autoBackup(){
+  try{
+    await IDB.set('copia-'+today(),snapshot());
+    const ks=(await IDB.keys()).map(String).filter(k=>k.startsWith('copia-')).sort();
+    while(ks.length>7)await IDB.del(ks.shift());
+    await refreshCopie();
+  }catch(e){}
+}
+async function refreshCopie(){try{copie=(await IDB.keys()).map(String).filter(k=>k.startsWith('copia-')).sort().reverse()}catch(e){copie=[]}}
+let wq=Promise.resolve();
+function saveLocal(){updatedAt=Date.now();wq=wq.then(writeState).then(autoBackup).catch(()=>{})}
 
 async function put(c,o,quiet){
   const i=S[c].findIndex(x=>x.id===o.id);
@@ -340,11 +344,73 @@ async function put(c,o,quiet){
   if(!quiet)render();saveLocal();
 }
 async function del(c,id){S[c]=S[c].filter(x=>x.id!==id);render();saveLocal()}
-async function putImp(o){S.imp=Object.assign({},S.imp,o);render();saveLocal()}
-function boot(){
-  loadLocal();render();
-  if(syncUrl){setSync('Mi collego al foglio…','');pull()}
+async function putImp(o,quiet){S.imp=Object.assign({},S.imp,o);if(!quiet)render();saveLocal()}
+
+/* ---------- file da scaricare ---------- */
+function scarica(nome,blob){
+  const url=URL.createObjectURL(blob);const l=document.createElement('a');l.href=url;l.download=nome;
+  document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+function csvMovimenti(){
+  const q=v=>{v=v==null?'':String(v);return /[;"\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  const n=v=>String(Math.round(num(v)*100)/100).replace('.',',');
+  const righe=[];
+  S.lavori.forEach(l=>{
+    if(l.stato==='venduta')righe.push([l.dataVendita||'','Vendita',l.nome,'1',n(l.prezzo),n(l.costo),n(num(l.prezzo)-num(l.costo)),l.cliente||'']);
+    else righe.push([l.dataFine||'','Da vendere',l.nome,'1',n(l.listino),n(l.costo),'','']);
+  });
+  S.spese.forEach(s=>righe.push([s.data||'','Acquisto materiale',s.nome,fq(num(s.quantita))+' '+(s.unita||''),n(s.totale),'','','']));
+  righe.sort((a,b)=>String(b[0]).localeCompare(String(a[0])));
+  righe.forEach(r=>{if(r[0]){const p=r[0].split('-');r[0]=p[2]+'/'+p[1]+'/'+p[0]}});
+  const testa=['Data','Tipo','Descrizione','Quantità','Importo €','Costo materiali €','Guadagno €','Cliente'];
+  return '﻿'+[testa].concat(righe).map(r=>r.map(q).join(';')).join('\r\n');
+}
+function giorniDa(d){if(!d)return 9999;const a=new Date(d+'T12:00:00'),b=new Date(today()+'T12:00:00');return Math.round((b-a)/864e5)}
+function promemoria(){
+  if(!S.lavori.length&&!S.spese.length)return '';
+  if(giorniDa(S.imp.ultimaCopia)<7)return '';
+  return `<div class="remind"><span>${S.imp.ultimaCopia?'È passata una settimana dall\'ultima copia.':'Non hai ancora scaricato una copia dei tuoi dati.'}</span><button class="btn small" data-act="export">Scarica copia</button></div>`;
+}
+
+async function boot(){
+  await loadState();loaded=true;render();
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+/* ---------- vetrina: immagine da condividere ---------- */
+const eurTag=v=>{const n=num(v);return '€ '+(Math.round(n)===n?String(n):n.toFixed(2).replace('.',','))};
+function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+async function cartolina(m){
+  try{await Promise.all(['700 120px Caveat','800 60px "Bricolage Grotesque"','400 36px "Atkinson Hyperlegible"'].map(f=>document.fonts.load(f)))}catch(e){}
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#F5F2F6';x.fillRect(0,0,W,H);
+  // cornice della vetrina
+  x.fillStyle='#6B4433';rr(x,40,40,1000,1000,22);x.fill();
+  x.save();rr(x,64,64,952,952,10);x.clip();
+  if(m.foto){const im=await loadImg(m.foto);const s=Math.max(952/im.width,952/im.height),w=im.width*s,h=im.height*s;x.drawImage(im,64+(952-w)/2,64+(952-h)/2,w,h)}
+  else{x.fillStyle='#EEE8F0';x.fillRect(64,64,952,952)}
+  const g=x.createLinearGradient(64,64,700,700);g.addColorStop(0,'rgba(255,255,255,.22)');g.addColorStop(.35,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(64,64,952,952);
+  x.restore();
+  // cartellino
+  const tx=640,ty=780;
+  x.save();x.translate(tx+170,ty+90);x.rotate(-6*Math.PI/180);x.translate(-170,-90);
+  x.strokeStyle='#3A2A1E';x.lineWidth=3;x.beginPath();x.moveTo(40,90);x.bezierCurveTo(10,20,60,-60,140,-150);x.stroke();
+  x.shadowColor='rgba(0,0,0,.28)';x.shadowBlur=24;x.shadowOffsetY=10;
+  x.fillStyle='#FFF8E8';x.beginPath();x.moveTo(60,0);x.lineTo(340,0);x.lineTo(340,180);x.lineTo(60,180);x.lineTo(0,120);x.lineTo(0,60);x.closePath();x.fill();
+  x.shadowColor='transparent';x.strokeStyle='#D9C8A6';x.lineWidth=2;x.stroke();
+  x.fillStyle='#F5F2F6';x.beginPath();x.arc(40,90,12,0,Math.PI*2);x.fill();x.strokeStyle='#C7B48D';x.stroke();
+  x.fillStyle='#8E2F5E';x.font='700 112px Caveat, cursive';x.textAlign='center';x.textBaseline='middle';x.fillText(eurTag(m.prezzo),195,98);
+  x.restore();
+  // testi
+  x.textAlign='left';x.textBaseline='alphabetic';
+  x.fillStyle='#2B2230';x.font='800 64px "Bricolage Grotesque", sans-serif';
+  const nome=m.nome||'';let fs=64;while(x.measureText(nome).width>1000&&fs>36){fs-=4;x.font='800 '+fs+'px "Bricolage Grotesque", sans-serif'}
+  x.fillText(nome,40,1140);
+  x.fillStyle='#5B4F63';x.font='400 38px "Atkinson Hyperlegible", sans-serif';x.fillText('Fatta a mano all\'uncinetto',40,1200);
+  x.fillStyle='#8E2F5E';x.font='700 38px "Atkinson Hyperlegible", sans-serif';x.fillText(S.imp.nome||'Le borse della mamma',40,1270);
+  return new Promise(res=>c.toBlob(b=>res(b),'image/jpeg',.9));
 }
 
 /* ---------- calculations ---------- */
@@ -367,7 +433,9 @@ function render(){
   $('#labName').textContent=S.imp.nome||'Le borse della mamma';
   document.querySelectorAll('.tabs button').forEach(b=>{if(b.dataset.tab===UI.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   const app=$('#app');
-    app.innerHTML=({borse:vBorse,materiali:vMateriali,vendite:vVendite,conti:vConti})[UI.tab]();
+  if(!loaded){app.innerHTML='<p class="loading">Sto aprendo il quaderno…</p>';return}
+  const V={vetrina:vVetrina,borse:vBorse,materiali:vMateriali,vendite:vVendite,conti:vConti};if(!V[UI.tab])UI.tab='vetrina';
+  app.innerHTML=promemoria()+V[UI.tab]();
   if(UI.tab==='conti')wireChart();
 }
 
@@ -483,13 +551,18 @@ function vConti(){
     <div class="field" style="margin-top:12px"><label for="impNome">Nome del laboratorio</label><input class="in-text" id="impNome" value="${esc(S.imp.nome)}"></div>
     <div class="field"><label for="impTar">Quanto vale un'ora di lavoro</label><div class="money"><span>€</span><input class="in-text" id="impTar" inputmode="decimal" value="${fq(num(S.imp.tariffa))}"></div><span class="help">Serve a calcolare il prezzo consigliato delle borse.</span></div>
     <button class="btn primary" data-act="saveImp">Salva impostazioni</button>
-    <p class="note" style="margin:16px 0 10px">I dati sono salvati su questo telefono${syncUrl?' e copiati sul foglio Google':''}. Ogni tanto scarica una copia di sicurezza.</p>
-    <div class="actions"><button class="btn" data-act="export">Scarica copia di sicurezza</button><button class="btn" data-act="import">Carica una copia</button></div>
-    <div class="field" style="margin-top:20px"><label for="impSync">Collegamento al foglio Google</label><input class="in-text" id="impSync" value="${esc(syncUrl)}" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false"><span class="help">Lo imposta Federico. Le foto restano solo sul telefono.</span></div>
-    <div class="actions"><button class="btn" data-act="saveSync">${syncUrl?'Aggiorna collegamento':'Collega il foglio'}</button>${syncUrl?'<button class="btn ghost" data-act="syncNow">Aggiorna adesso</button>':''}</div>
-    <p class="sync ${syncState.cls}" id="syncLine">${esc(syncState.t)}</p>
-</div>
-  </div>`;
+    </div>
+  <div class="card">
+    <h3>I tuoi dati</h3>
+    <p class="hint" style="margin:4px 0 14px">Tutto è salvato su questo telefono. Ogni giorno l'app tiene da parte una copia automatica degli ultimi 7 giorni.</p>
+    <div class="actions">
+      <button class="btn primary" data-act="export">Scarica copia completa</button>
+      <button class="btn" data-act="csv">Scarica movimenti (CSV per Excel)</button>
+      <button class="btn ghost" data-act="import">Carica una copia</button>
+    </div>
+    <p class="help" style="margin:10px 0 0;color:var(--muted);font-size:.88rem">${S.imp.ultimaCopia?'Ultima copia scaricata il '+fd(S.imp.ultimaCopia)+'.':'Non hai ancora scaricato nessuna copia.'} La copia completa contiene anche le foto: conservala su Google Drive o mandala a Federico.</p>
+    ${copie.length?`<h3 class="group" style="margin-top:20px">Copie automatiche</h3><div class="list">${copie.map(k=>`<div class="row"><span class="main"><span class="t">${fd(k.slice(6))}</span><span class="s">${k.slice(6)===today()?'Oggi, aggiornata a ogni modifica':'Com\'era a fine giornata'}</span></span><button class="btn small ghost" data-act="restoreAsk" data-id="${esc(k)}">Ripristina</button></div>`).join('')}</div>`:''}
+</div>`;
 }
 function wireChart(){
   const box=$('#chart');if(!box)return;const tip=$('#tip');
@@ -498,6 +571,63 @@ function wireChart(){
     const r=el.getBoundingClientRect(),br=box.getBoundingClientRect();let x=r.left-br.left+r.width/2;x=Math.max(70,Math.min(br.width-70,x));tip.style.left=x+'px';tip.style.top=(r.top-br.top+6)+'px'};
   box.querySelectorAll('.hit').forEach(h=>{h.addEventListener('pointerenter',()=>show(h));h.addEventListener('click',()=>show(h))});
   box.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'){tip.hidden=true;box.querySelectorAll('.hit').forEach(h=>h.classList.remove('on'))}});
+}
+
+
+/* ---------- vetrina ---------- */
+function vVetrina(){
+  const list=S.modelli.filter(m=>m.vetrina).sort(byName);
+  return `<div class="sec-head"><h2>Vetrina</h2><p class="hint">Le borse da mostrare con il loro cartellino. Tocca una borsa per condividerla.</p></div>
+  <button class="btn primary big" data-act="vetAdd">+ Metti in vetrina</button>
+  ${list.length?`<div class="window"><div class="vetrina">${list.map(m=>`<button class="vcard" data-act="vetOpen" data-id="${esc(m.id)}">
+      <span class="vimg">${m.foto?`<img src="${esc(m.foto)}" alt="">`:`<span class="nofoto">Tocca per<br>mettere la foto</span>`}</span>
+      <span class="tag"><span class="tp">${esc(eurTag(m.prezzo))}</span></span>
+      <span class="vname">${esc(m.nome)}</span></button>`).join('')}</div></div>`
+  :`<div class="empty-box" style="margin-top:16px">La vetrina è vuota.<br>Tocca <b>Metti in vetrina</b> e scegli una foto dalla galleria.</div>`}`;
+}
+let pending={blob:null,id:null};
+function vetOpen(m){
+  pending={blob:null,id:m.id};
+  openSheet(`<h2 id="sheetTitle">${esc(m.nome)}</h2>
+  <div class="vbig"><div class="vimg">${m.foto?`<img src="${esc(m.foto)}" alt="">`:`<span class="nofoto">Nessuna foto</span>`}</div><span class="tag big"><span class="tp">${esc(eurTag(m.prezzo))}</span></span></div>
+  <div class="actions">
+    <button class="btn primary big" data-act="share" data-id="${esc(m.id)}" id="shareBtn" disabled>Preparo l'immagine…</button>
+    <button class="btn" data-act="vetFoto" data-id="${esc(m.id)}">${m.foto?'Cambia foto':'Metti la foto'}</button>
+    <button class="btn" data-act="editMod" data-id="${esc(m.id)}">Cambia nome o prezzo</button>
+    <button class="btn ghost" data-act="vetHide" data-id="${esc(m.id)}">Togli dalla vetrina</button>
+    <button class="btn ghost" data-act="close">Chiudi</button>
+  </div>
+  <p class="hint" style="margin-top:12px">Condividi crea una foto con il cartellino del prezzo, pronta da mandare su WhatsApp.</p>`);
+  cartolina(m).then(b=>{if(pending.id!==m.id)return;pending.blob=b;const s=$('#shareBtn');if(s){s.disabled=false;s.textContent='Condividi'}})
+    .catch(()=>{const s=$('#shareBtn');if(s){s.textContent='Non riesco a preparare l\'immagine'}});
+}
+function vetAddForm(){
+  const altre=S.modelli.filter(m=>!m.vetrina).sort(byName);
+  openSheet(`<h2 id="sheetTitle">Metti in vetrina</h2>
+  <button class="btn primary big" data-act="vetNew">Borsa nuova: scegli la foto</button>
+  ${altre.length?`<h3 class="group">Oppure una borsa che hai già</h3><div class="pick-list">${altre.map(m=>`<button class="pick" data-act="vetPick" data-id="${esc(m.id)}">${photo(m)}<span class="mbody"><span class="mname">${esc(m.nome)}</span><span class="hint">${eur(num(m.prezzo))}${m.foto?'':' · senza foto'}</span></span></button>`).join('')}</div>`:''}
+  <div class="actions"><button class="btn ghost" data-act="close">Annulla</button></div>`);
+}
+function vetNewForm(){
+  const d=draft;
+  openSheet(`<h2 id="sheetTitle">Borsa nuova in vetrina</h2>
+  <div class="vbig small"><div class="vimg"><img src="${esc(d.foto)}" alt=""></div></div>
+  <div class="field"><label for="fNome">Nome della borsa</label><input class="in-text" id="fNome" value="${esc(d.nome||'')}" placeholder="Es. Secchiello rosso"></div>
+  <div class="field"><label for="fPrezzo">Prezzo</label>${money('fPrezzo',d.prezzo||'')}</div>
+  <p class="hint" style="margin:-4px 0 14px">Materiali e ore di lavoro li puoi aggiungere dopo dalla sezione Borse.</p>
+  <div class="actions"><button class="btn primary big" data-act="vetSaveNew">Metti in vetrina</button><button class="btn ghost" data-act="vetNew">Scegli un'altra foto</button><button class="btn ghost" data-act="close">Annulla</button></div>`);
+}
+let photoCb=null;
+function pickPhoto(cb){photoCb=cb;$('#fileFoto').click()}
+async function condividi(m){
+  const b=pending.blob;if(!b)return;
+  const nomeFile=(m.nome||'borsa').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.jpg';
+  const file=new File([b],nomeFile,{type:'image/jpeg'});
+  const testo=`${m.nome} – ${eur(num(m.prezzo))}\nFatta a mano all'uncinetto da ${S.imp.nome||'Le borse della mamma'}`;
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:testo});return}
+  }catch(e){if(e&&e.name==='AbortError')return}
+  scarica(nomeFile,b);toast('Foto salvata: ora puoi mandarla da WhatsApp');
 }
 
 /* ---------- sheet ---------- */
@@ -525,12 +655,13 @@ function modForm(){
   <div class="calc"><div class="kv"><span>Costo materiali</span><b>${eur(c)}</b></div><div class="kv"><span>Prezzo consigliato</span><b>${eur(sug)}</b></div>
     ${sug>0?`<button class="btn small" data-act="useSug" data-v="${sug}" style="align-self:flex-start">Usa ${eur0(sug)}</button>`:''}<span class="help">Materiali + ${fq(num(d.ore))} ore a ${eur(num(S.imp.tariffa))}, arrotondato.</span></div>
   <div class="field"><label for="fPrezzo">Prezzo di vendita</label>${money('fPrezzo',d.prezzo)}</div>
+  <label class="check" style="margin:-4px 0 14px"><input type="checkbox" id="fVet" ${d.vetrina?'checked':''}> Mostra in vetrina</label>
   <div class="field"><label for="fNote">Note</label><textarea class="in-text" id="fNote" placeholder="Colori, misure, punto usato…">${esc(d.note)}</textarea></div>
   <div class="actions"><button class="btn primary big" data-act="saveMod">Salva</button><button class="btn ghost" data-act="close">Annulla</button>
   ${d.isNew?'':`<button class="btn danger" data-act="cfAsk">Elimina questa borsa</button>${confirmBox('Eliminare questo modello?','delMod',d.id)}`}</div>`);
 }
 function readMod(){if(!draft)return;const g=id=>document.getElementById(id);
-  if(g('fNome'))draft.nome=g('fNome').value;if(g('fPrezzo'))draft.prezzo=g('fPrezzo').value;if(g('fNote'))draft.note=g('fNote').value;
+  if(g('fNome'))draft.nome=g('fNome').value;if(g('fPrezzo'))draft.prezzo=g('fPrezzo').value;if(g('fNote'))draft.note=g('fNote').value;if(g('fVet'))draft.vetrina=g('fVet').checked;
   document.querySelectorAll('select[data-mi]').forEach(s=>{draft.materiali[+s.dataset.mi].id=s.value})}
 function reMod(){const sc=$('.sheet').scrollTop;modForm();$('.sheet').scrollTop=sc}
 
@@ -598,11 +729,11 @@ function lavForm(l){
 
 /* ---------- photo ---------- */
 function shrink(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();
-  img.onload=()=>{const M=480,s=Math.min(1,M/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.72))};
+  img.onload=()=>{const M=900,s=Math.min(1,M/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.8))};
   img.onerror=()=>{URL.revokeObjectURL(url);rej()};img.src=url})}
-$('#fileFoto').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f||!draft)return;
-  try{readMod();draft.foto=await shrink(f);reMod()}catch(err){toast('Non riesco ad aprire questa foto')}});
+$('#fileFoto').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';const cb=photoCb;photoCb=null;if(!f||!cb)return;
+  try{cb(await shrink(f))}catch(err){toast('Non riesco ad aprire questa foto')}});
 
 /* ---------- backup ---------- */
 $('#fileImport').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
@@ -639,10 +770,10 @@ document.addEventListener('click',async e=>{
       if(m&&Math.abs(draft.tot-num(m.prezzo)*oldQ)<.005)draft.tot=Math.round(num(m.prezzo)*draft.q*100)/100;drawCompra()}
     break}
   case 'useSug':readMod();draft.prezzo=num(b.dataset.v);reMod();break;
-  case 'pickFoto':readMod();$('#fileFoto').click();break;
+  case 'pickFoto':readMod();pickPhoto(url=>{if(draft&&draft.kind==='mod'){draft.foto=url;reMod()}});break;
   case 'noFoto':readMod();draft.foto='';reMod();break;
   case 'saveMod':{readMod();const d=draft;if(!d.nome.trim()){toast('Scrivi il nome della borsa');$('#fNome').focus();return}
-    const o={id:d.id,nome:d.nome.trim(),foto:d.foto||'',ore:num(d.ore),prezzo:num(d.prezzo),note:d.note||'',materiali:d.materiali.filter(r=>num(r.qta)>0).map(r=>({id:r.id,qta:num(r.qta)}))};
+    const o={id:d.id,nome:d.nome.trim(),foto:d.foto||'',ore:num(d.ore),prezzo:num(d.prezzo),note:d.note||'',vetrina:!!d.vetrina,materiali:d.materiali.filter(r=>num(r.qta)>0).map(r=>({id:r.id,qta:num(r.qta)}))};
     closeSheet();await put('modelli',o);toast('Borsa salvata');break}
   case 'delMod':closeSheet();await del('modelli',id);toast('Borsa eliminata');break;
   /* materials */
@@ -679,13 +810,24 @@ document.addEventListener('click',async e=>{
   case 'delLav':closeSheet();await del('lavori',id);toast('Eliminata');break;
   /* settings */
   case 'saveImp':await putImp({nome:$('#impNome').value.trim()||'Le borse della mamma',tariffa:num($('#impTar').value)});toast('Impostazioni salvate');break;
-  case 'export':{const data=JSON.stringify(snapshot(false));const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
-    const l=document.createElement('a');l.href=url;l.download='borse-copia-'+today()+'.json';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Copia scaricata');break}
-  case 'saveSync':{const v=$('#impSync').value.trim();
-    if(v&&!/^https:\/\/script\.google(usercontent)?\.com\//.test(v)){toast('Questo non sembra un indirizzo di Apps Script');return}
-    syncUrl=v;try{localStorage.setItem(SK,v)}catch(e){}
-    if(v){setSync('Mi collego al foglio…','');render();await pull()}else{setSync('','');render()}break}
-  case 'syncNow':setSync('Aggiorno…','');await pull();await push();break;
+  case 'export':{scarica('borse-copia-'+today()+'.json',new Blob([JSON.stringify(snapshot())],{type:'application/json'}));
+    await putImp({ultimaCopia:today()});toast('Copia scaricata: la trovi nei Download');break}
+  case 'csv':scarica('borse-movimenti-'+today()+'.csv',new Blob([csvMovimenti()],{type:'text/csv;charset=utf-8'}));toast('File CSV scaricato');break;
+  case 'restoreAsk':openSheet(`<h2 id="sheetTitle">Tornare alla copia del ${fd(id.slice(6))}?</h2><p>Borse, materiali, acquisti e vendite torneranno com'erano quel giorno. Le modifiche fatte dopo andranno perse.</p>
+    <div class="actions"><button class="btn primary big" data-act="restore" data-id="${esc(id)}">Sì, ripristina</button><button class="btn ghost" data-act="close">Annulla</button></div>`);break;
+  case 'restore':{closeSheet();try{const d=await IDB.get(id);if(!d)throw 0;const keep=S.imp.ultimaCopia;apply(d);S.imp.ultimaCopia=keep;saveLocal();render();toast('Dati ripristinati')}catch(e){toast('Non riesco a leggere questa copia')}break}
+  /* vetrina */
+  case 'vetAdd':vetAddForm();break;
+  case 'vetOpen':{const m=mod(id);if(!m)return;if(!m.foto){pickPhoto(async url=>{await put('modelli',Object.assign({},m,{foto:url}));vetOpen(mod(id))});return}vetOpen(m);break}
+  case 'vetNew':pickPhoto(url=>{draft={kind:'vnew',foto:url,nome:draft&&draft.kind==='vnew'?($('#fNome')||{}).value:'',prezzo:draft&&draft.kind==='vnew'?($('#fPrezzo')||{}).value:''};vetNewForm()});break;
+  case 'vetSaveNew':{const n=$('#fNome').value.trim(),p=num($('#fPrezzo').value);if(!n){toast('Scrivi il nome della borsa');$('#fNome').focus();return}
+    const o={id:uid('mod'),nome:n,foto:draft.foto,ore:0,prezzo:p,note:'',materiali:[],vetrina:true};closeSheet();await put('modelli',o);toast('Borsa messa in vetrina');break}
+  case 'vetPick':{const m=mod(id);if(!m)return;closeSheet();
+    if(!m.foto){pickPhoto(async url=>{await put('modelli',Object.assign({},m,{foto:url,vetrina:true}));toast('Borsa messa in vetrina')});await put('modelli',Object.assign({},m,{vetrina:true}),true);render();return}
+    await put('modelli',Object.assign({},m,{vetrina:true}));toast('Borsa messa in vetrina');break}
+  case 'vetFoto':{const m=mod(id);if(!m)return;pickPhoto(async url=>{await put('modelli',Object.assign({},mod(id)||m,{foto:url}));vetOpen(mod(id))});break}
+  case 'vetHide':{const m=mod(id);if(!m)return;closeSheet();await put('modelli',Object.assign({},m,{vetrina:false}));toast('Tolta dalla vetrina (resta tra le tue borse)');break}
+  case 'share':{const m=mod(id);if(m)await condividi(m);break}
 case 'import':$('#fileImport').click();break;
   case 'doImport':doImport();break;
   }

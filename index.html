@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8E2F5E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Borse">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Le borse della mamma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: one calm column, big tap targets, tab bar fixed at the bottom; the "stitch" dashed line is the only ornament. */
+:root{
+  --bg:#F5F2F6; --surface:#FFFFFF; --surface-2:#EEE8F0; --line:#DDD3E0;
+  --ink:#2B2230; --ink-2:#5B4F63; --muted:#7D7184;
+  --accent:#8E2F5E; --accent-ink:#FFFFFF; --accent-soft:#F4E4EC;
+  --good:#2C7A4B; --good-soft:#E2F1E7; --warn:#8F5200; --warn-soft:#FBEFD9; --danger:#B3261E; --danger-soft:#FBE5E3;
+  --inc:#2A6BB0; --spe:#C8711C;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", Verdana, system-ui, sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#18141B; --surface:#221D26; --surface-2:#2D2732; --line:#3B3341;
+  --ink:#F3EDF5; --ink-2:#CDC2D2; --muted:#A196A7;
+  --accent:#E58DB7; --accent-ink:#2B0F1E; --accent-soft:#3B2332;
+  --good:#72C795; --good-soft:#1E3327; --warn:#E8B460; --warn-soft:#3A2E19; --danger:#FF8F86; --danger-soft:#3D1F1D;
+  --inc:#5C93D6; --spe:#C8711C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#18141B; --surface:#221D26; --surface-2:#2D2732; --line:#3B3341;
+  --ink:#F3EDF5; --ink-2:#CDC2D2; --muted:#A196A7;
+  --accent:#E58DB7; --accent-ink:#2B0F1E; --accent-soft:#3B2332;
+  --good:#72C795; --good-soft:#1E3327; --warn:#E8B460; --warn-soft:#3A2E19; --danger:#FF8F86; --danger-soft:#3D1F1D;
+  --inc:#5C93D6; --spe:#C8711C; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.45;padding:0 16px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto}
+
+/* header */
+.top{padding-block:18px 14px;position:relative}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{flex:none}
+.top h1{font-family:var(--f-display);font-weight:800;font-size:1.65rem;line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.top .sub{margin:2px 0 0;color:var(--muted);font-size:.95rem}
+.stitch{height:4px;margin-top:14px;background-image:repeating-linear-gradient(90deg,var(--accent) 0 10px,transparent 10px 18px);border-radius:4px;opacity:.55}
+
+main{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+.sec-head{display:flex;flex-direction:column;gap:2px;margin:20px 0 14px}
+.sec-head h2{font-family:var(--f-display);font-weight:800;font-size:1.4rem;margin:0}
+.hint{color:var(--muted);margin:0;font-size:.95rem}
+h3.group{font-family:var(--f-display);font-weight:600;font-size:1.05rem;color:var(--ink-2);margin:22px 0 8px;letter-spacing:.02em}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 20px;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-weight:700}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.big{width:100%;min-height:60px;font-size:1.1rem}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger);border-color:var(--danger-soft);background:var(--danger-soft)}
+.btn.small{min-height:44px;padding:0 14px;font-size:.95rem}
+.btn.good{background:var(--good);border-color:var(--good);color:var(--surface)}
+.btn:active{transform:translateY(1px)}
+
+/* model cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px;margin-top:16px}
+.mcard{display:flex;gap:14px;align-items:stretch;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;width:100%}
+.photo{flex:none;width:96px;height:96px;border-radius:12px;overflow:hidden;background:var(--surface-2);display:grid;place-items:center;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo.empty{background-image:radial-gradient(circle at 50% 50%,transparent 5px,var(--line) 6px,var(--line) 7px,transparent 8px);background-size:22px 22px}
+.photo.empty span{font-family:var(--f-display);font-weight:800;font-size:1.8rem;color:var(--accent);background:var(--surface-2);border-radius:50%;width:48px;height:48px;display:grid;place-items:center}
+.mbody{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.mname{font-family:var(--f-display);font-weight:600;font-size:1.12rem;line-height:1.2}
+.kv{display:flex;justify-content:space-between;gap:8px;font-size:.95rem;color:var(--ink-2)}
+.kv b{color:var(--ink);font-variant-numeric:tabular-nums}
+.kv .pos{color:var(--good)} .kv .neg{color:var(--danger)}
+
+/* list rows */
+.list{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 10px 10px 14px}
+.row .main{flex:1;min-width:0;text-align:left;background:none;border:0;padding:6px 0;display:flex;flex-direction:column;gap:2px}
+.row .t{font-weight:700;line-height:1.25}
+.row .s{color:var(--muted);font-size:.92rem;font-variant-numeric:tabular-nums}
+.row .amt{font-family:var(--f-display);font-weight:800;font-size:1.15rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.02em}
+.chip.ready{background:var(--warn-soft);color:var(--warn)}
+.chip.sold{background:var(--good-soft);color:var(--good)}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface-2);padding:5px;border-radius:14px;margin:16px 0}
+.seg button{min-height:48px;border:0;border-radius:10px;background:transparent;font-weight:700;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{min-height:46px;padding:0 16px;border-radius:99px;border:2px solid var(--line);background:var(--surface);font-weight:700;color:var(--ink-2)}
+.chips button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+
+.empty-box{border:2px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--muted)}
+.note{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.95rem;color:var(--ink-2)}
+
+/* stats */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hero .big{grid-column:1/-1}
+.stat .lab{font-size:.85rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.stat .val{font-family:var(--f-display);font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat.big .val{font-size:2.3rem}
+.stat .val.pos{color:var(--good)} .stat .val.neg{color:var(--danger)}
+.stat .foot{font-size:.85rem;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.tile .val{font-size:1.35rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:14px}
+.card h3{font-family:var(--f-display);font-weight:600;font-size:1.1rem;margin:0 0 4px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--ink-2);margin:6px 0 4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chartbox{position:relative}
+.chartbox svg{display:block;width:100%;height:auto;overflow:visible}
+.chartbox text{font-family:var(--f-body);fill:var(--muted);font-size:13px}
+.chartbox .hit{fill:transparent;cursor:pointer}
+.chartbox .hit.on{fill:var(--surface-2)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:10px;padding:8px 12px;font-size:.9rem;line-height:1.35;white-space:nowrap;transform:translate(-50%,-100%);font-variant-numeric:tabular-nums}
+.tip b{display:block}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.95rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:700;font-size:.85rem}
+.linkbtn{background:none;border:0;color:var(--accent);font-weight:700;padding:8px 0;min-height:44px}
+.rank{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rank:last-child{border-bottom:0}
+.rank .top{display:flex;justify-content:space-between;gap:10px;font-weight:700;padding:0}
+.rank .s{color:var(--muted);font-size:.9rem}
+.rank .top span:last-child{white-space:nowrap;color:var(--ink-2)}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:10}
+.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:62px;border-radius:12px;font-size:.85rem;font-weight:700;color:var(--muted)}
+.tabs button svg{width:26px;height:26px}
+.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+
+/* sheet */
+.sheet-wrap{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.backdrop{position:absolute;inset:0;background:rgba(20,10,20,.45)}
+.sheet{position:relative;background:var(--bg);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:22px 22px 0 0;padding:8px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet .grab{width:44px;height:5px;border-radius:5px;background:var(--line);margin:4px auto 10px}
+.sheet h2{font-family:var(--f-display);font-weight:800;font-size:1.35rem;margin:0 0 14px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field > label,.field > .lab{font-weight:700}
+.field .help{color:var(--muted);font-size:.88rem}
+.in-text{min-height:54px;border:2px solid var(--line);border-radius:12px;padding:0 14px;background:var(--surface);width:100%}
+textarea.in-text{padding:12px 14px;min-height:84px}
+.in-text:focus{border-color:var(--accent);outline:none}
+.money{position:relative}
+.money span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700}
+.money .in-text{padding-left:34px;font-weight:700;font-size:1.15rem}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:52px;height:52px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-size:1.5rem;font-weight:700;line-height:1;flex:none}
+.stepper output{min-width:56px;text-align:center;font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.matrow{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.matrow .line1{display:flex;gap:8px;align-items:center}
+.matrow select{flex:1;min-width:0}
+.matrow .line2{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.matrow .sub{color:var(--muted);font-size:.92rem;font-variant-numeric:tabular-nums}
+.x{width:44px;height:44px;border-radius:10px;border:0;background:var(--surface-2);font-size:1.3rem;flex:none}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.calc .kv{font-size:1rem}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.photo-pick{display:flex;gap:14px;align-items:center}
+.photo-pick .photo{width:110px;height:110px}
+.pick-list{display:flex;flex-direction:column;gap:10px}
+.pick{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px;text-align:left;width:100%}
+.pick .photo{width:64px;height:64px}
+.pick .photo.empty span{width:36px;height:36px;font-size:1.3rem}
+.confirm{background:var(--danger-soft);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:700;z-index:40;max-width:calc(100% - 32px);text-align:center}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:center;min-height:48px;font-weight:700}
+.check input{width:24px;height:24px;accent-color:var(--accent)}
+@media (max-width:380px){.tiles{grid-template-columns:1fr 1fr}.photo{width:80px;height:80px}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+.sync{font-size:.9rem;color:var(--muted);margin:8px 0 0}
+.sync.ok{color:var(--good)} .sync.err{color:var(--danger)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="var(--accent)"/><path d="M8 18c8 2 20 2 28-4M7 25c10 3 22 1 30-6M10 32c8 1 18-1 24-8M18 5c-2 10 0 24 8 34" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" opacity=".75"/><path d="M36 30c3 4 5 7 4 10" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <div><h1 id="labName">Le borse della mamma</h1><p class="sub">Modelli, materiali e conti</p></div>
+    </div>
+    <div class="stitch"></div>
+  </header>
+  <main id="app"><p class="loading">Sto aprendo il quaderno…</p></main>
+</div>
+
+<nav class="tabs" aria-label="Sezioni"><div class="in">
+  <button data-tab="borse" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.2 10.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 9a3.5 4 0 0 1 7 0"/></svg>Borse</button>
+  <button data-tab="materiali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="12" r="7"/><path d="M5.5 9.5c4 .5 8 0 11-2M5 14c5 1 9 0 12-3M8 18c3 0 7-2 9-5M18 17c2 1 3 2 3 4"/></svg>Materiali</button>
+  <button data-tab="vendite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 12 20l-8-8V4h8z"/><circle cx="8" cy="8" r="1.5"/></svg>Vendite</button>
+  <button data-tab="conti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Conti</button>
+</div></nav>
+
+<div class="sheet-wrap" id="sheetWrap" hidden>
+  <div class="backdrop" data-act="close"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div><div id="sheetBody"></div></section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<input type="file" id="fileFoto" accept="image/*" hidden>
+<input type="file" id="fileImport" accept="application/json,.json" hidden>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const EUR=new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'});
+const eur=n=>EUR.format(Math.round((n||0)*100)/100);
+const eur0=n=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);
+const num=v=>{const n=parseFloat(String(v==null?'':v).replace(/\s|€/g,'').replace(',','.'));return isFinite(n)?n:0};
+const fq=n=>String(Math.round(n*100)/100).replace('.',',');
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const uid=p=>p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+const fd=s=>{if(!s)return'';const p=s.split('-');return (+p[2])+' '+MESI[+p[1]-1]+' '+p[0]};
+const TIPI=['Filato','Manici','Chiusure','Fodera','Accessori','Altro'];
+const UNITA=['gomitolo','rocchetto','paio','pezzo','metro','confezione'];
+const PLURALI={gomitolo:'gomitoli',rocchetto:'rocchetti',paio:'paia',pezzo:'pezzi',metro:'metri',confezione:'confezioni'};
+const un=(u,q)=>q===1?u:(PLURALI[u]||u);
+
+/* Default catalog used only when data lives on this phone */
+const DEF={
+ materiali:[
+  {id:'mat-fettuccia',nome:'Fettuccia di cotone (250 g)',tipo:'Filato',unita:'gomitolo',prezzo:6.5},
+  {id:'mat-cordino',nome:'Cordino di cotone 5 mm (100 m)',tipo:'Filato',unita:'rocchetto',prezzo:12},
+  {id:'mat-rafia',nome:'Rafia naturale (40 g)',tipo:'Filato',unita:'gomitolo',prezzo:3.5},
+  {id:'mat-cotone',nome:'Cotone da uncinetto (50 g)',tipo:'Filato',unita:'gomitolo',prezzo:2.9},
+  {id:'mat-bambu',nome:'Manici in bambù',tipo:'Manici',unita:'paio',prezzo:6},
+  {id:'mat-ecopelle',nome:'Manici in ecopelle',tipo:'Manici',unita:'paio',prezzo:8.5},
+  {id:'mat-catena',nome:'Tracolla a catena 120 cm',tipo:'Manici',unita:'pezzo',prezzo:5},
+  {id:'mat-calamita',nome:'Chiusura a calamita',tipo:'Chiusure',unita:'pezzo',prezzo:.8},
+  {id:'mat-zip',nome:'Cerniera 20 cm',tipo:'Chiusure',unita:'pezzo',prezzo:1.5},
+  {id:'mat-fodera',nome:'Stoffa per fodera',tipo:'Fodera',unita:'metro',prezzo:7},
+  {id:'mat-fondo',nome:'Fondo ovale in ecopelle',tipo:'Accessori',unita:'pezzo',prezzo:5.5},
+  {id:'mat-anelli',nome:'Anelli a D (2 pezzi)',tipo:'Accessori',unita:'confezione',prezzo:1.2},
+  {id:'mat-etichette',nome:'Etichette "fatto a mano" (10 pezzi)',tipo:'Accessori',unita:'confezione',prezzo:4}
+ ],
+ modelli:[
+  {id:'mod-secchiello',nome:'Secchiello in fettuccia',foto:'',ore:5,prezzo:40,note:'',materiali:[{id:'mat-fettuccia',qta:2},{id:'mat-calamita',qta:1},{id:'mat-etichette',qta:.1}]},
+  {id:'mod-shopper',nome:'Shopper in cordino',foto:'',ore:8,prezzo:55,note:'',materiali:[{id:'mat-cordino',qta:1},{id:'mat-ecopelle',qta:1},{id:'mat-etichette',qta:.1}]},
+  {id:'mod-pochette',nome:'Pochette da sera',foto:'',ore:4,prezzo:30,note:'',materiali:[{id:'mat-cotone',qta:3},{id:'mat-zip',qta:1},{id:'mat-fodera',qta:.3}]},
+  {id:'mod-tracolla',nome:'Tracolla in rafia',foto:'',ore:6,prezzo:45,note:'',materiali:[{id:'mat-rafia',qta:4},{id:'mat-catena',qta:1},{id:'mat-anelli',qta:1},{id:'mat-calamita',qta:1}]},
+  {id:'mod-bambu',nome:'Borsa con manici in bambù',foto:'',ore:7,prezzo:50,note:'',materiali:[{id:'mat-fettuccia',qta:3},{id:'mat-bambu',qta:1},{id:'mat-fodera',qta:.5}]}
+ ]
+};
+
+/* ---------- state & storage ---------- */
+const COLLS=['materiali','modelli','lavori','spese'];
+const S={materiali:[],modelli:[],lavori:[],spese:[],imp:{nome:'Le borse della mamma',tariffa:6}};
+let mode='local';
+const UI={tab:'borse',vend:'pronte',per:'anno',table:false};
+const LK='borse-uncinetto-v1',SK='borse-sync-url';
+let updatedAt=0,syncUrl='',syncState={t:'',cls:''};
+try{const t=sessionStorage.getItem('bm-tab');if(t)UI.tab=t}catch(e){}
+try{syncUrl=localStorage.getItem(SK)||''}catch(e){}
+
+function loadLocal(){
+  let d=null;try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}
+  if(!d)d={materiali:DEF.materiali,modelli:DEF.modelli,lavori:[],spese:[],imp:S.imp,updatedAt:0};
+  apply(d);writeLocal();
+}
+function apply(d){
+  COLLS.forEach(c=>S[c]=Array.isArray(d[c])?d[c]:[]);
+  if(d.imp)S.imp=Object.assign({},S.imp,d.imp);
+  updatedAt=num(d.updatedAt);
+}
+function snapshot(noPhotos){
+  const mods=noPhotos?S.modelli.map(m=>Object.assign({},m,{foto:''})):S.modelli;
+  return {materiali:S.materiali,modelli:mods,lavori:S.lavori,spese:S.spese,imp:S.imp,updatedAt};
+}
+function writeLocal(){
+  try{localStorage.setItem(LK,JSON.stringify(snapshot(false)))}
+  catch(e){toast('Memoria del telefono piena: togli qualche foto')}
+}
+function saveLocal(){updatedAt=Date.now();writeLocal();schedPush()}
+
+/* ---------- Google Sheet sync (optional) ---------- */
+function setSync(t,cls){syncState={t,cls:cls||''};const el=document.getElementById('syncLine');if(el){el.textContent=t;el.className='sync '+(cls||'')}}
+const ora=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())};
+async function pull(){
+  if(!syncUrl)return;
+  if(!navigator.onLine){setSync('Senza internet: aggiorno appena torna la rete.','err');return}
+  try{
+    const r=await fetch(syncUrl+(syncUrl.includes('?')?'&':'?')+'azione=leggi',{redirect:'follow'});
+    const j=await r.json();
+    if(j&&j.dati&&num(j.dati.updatedAt)>updatedAt){
+      const foto={};S.modelli.forEach(m=>{if(m.foto)foto[m.id]=m.foto});
+      apply(j.dati);S.modelli.forEach(m=>{if(!m.foto&&foto[m.id])m.foto=foto[m.id]});
+      writeLocal();if($('#sheetWrap').hidden)render();
+    }else if(j&&(!j.dati||num(j.dati.updatedAt)<updatedAt)){await push();return}
+    setSync('Collegato al foglio · aggiornato alle '+ora(),'ok');
+  }catch(e){setSync('Non riesco a raggiungere il foglio. Riprovo più tardi.','err')}
+}
+let pushT=0,pushing=false,again=false;
+function schedPush(){if(!syncUrl)return;clearTimeout(pushT);pushT=setTimeout(push,1500)}
+async function push(){
+  if(!syncUrl)return;if(pushing){again=true;return}
+  if(!navigator.onLine){setSync('Senza internet: salvo sul foglio appena torna la rete.','err');return}
+  pushing=true;
+  try{
+    if(!updatedAt){updatedAt=Date.now();writeLocal()}
+    const r=await fetch(syncUrl,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({azione:'scrivi',dati:snapshot(true)})});
+    const j=await r.json();
+    if(!j||!j.ok)throw 0;
+    setSync('Collegato al foglio · salvato alle '+ora(),'ok');
+    if(j.vecchio){pushing=false;await pull();return}
+  }catch(e){setSync('Salvataggio sul foglio non riuscito. Riprovo più tardi.','err')}
+  pushing=false;if(again){again=false;push()}
+}
+window.addEventListener('online',()=>{pull()});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pull()});
+
+async function put(c,o,quiet){
+  const i=S[c].findIndex(x=>x.id===o.id);
+  if(i>=0)S[c][i]=o;else S[c].push(o);
+  if(!quiet)render();saveLocal();
+}
+async function del(c,id){S[c]=S[c].filter(x=>x.id!==id);render();saveLocal()}
+async function putImp(o){S.imp=Object.assign({},S.imp,o);render();saveLocal()}
+function boot(){
+  loadLocal();render();
+  if(syncUrl){setSync('Mi collego al foglio…','');pull()}
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+/* ---------- calculations ---------- */
+const mat=id=>S.materiali.find(m=>m.id===id);
+const mod=id=>S.modelli.find(m=>m.id===id);
+const costo=m=>(m.materiali||[]).reduce((t,r)=>{const x=mat(r.id);return t+(x?num(x.prezzo)*num(r.qta):0)},0);
+const consigliato=(c,ore)=>{const v=c+num(ore)*num(S.imp.tariffa);return v<=0?0:Math.ceil(v/5)*5};
+const byName=(a,b)=>String(a.nome).localeCompare(String(b.nome),'it');
+function inPer(d){
+  if(!d)return false;if(UI.per==='sempre')return true;
+  const t=today();return UI.per==='mese'?d.slice(0,7)===t.slice(0,7):d.slice(0,4)===t.slice(0,4);
+}
+
+/* ---------- render ---------- */
+function photo(m,cls){
+  const ini=esc((m.nome||'?').trim().charAt(0).toUpperCase());
+  return m.foto?`<div class="photo ${cls||''}"><img src="${esc(m.foto)}" alt=""></div>`:`<div class="photo empty ${cls||''}"><span>${ini}</span></div>`;
+}
+function render(){
+  $('#labName').textContent=S.imp.nome||'Le borse della mamma';
+  document.querySelectorAll('.tabs button').forEach(b=>{if(b.dataset.tab===UI.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  const app=$('#app');
+    app.innerHTML=({borse:vBorse,materiali:vMateriali,vendite:vVendite,conti:vConti})[UI.tab]();
+  if(UI.tab==='conti')wireChart();
+}
+
+function vBorse(){
+  const list=S.modelli.slice().sort(byName);
+  return `<div class="sec-head"><h2>Le mie borse</h2><p class="hint">I modelli che sai fare. Tocca una borsa per cambiarla.</p></div>
+  <button class="btn primary big" data-act="newMod">+ Nuovo modello</button>
+  ${list.length?`<div class="grid">${list.map(m=>{const c=costo(m),r=num(m.prezzo)-c;return `<button class="mcard" data-act="editMod" data-id="${esc(m.id)}">
+    ${photo(m)}<div class="mbody"><div class="mname">${esc(m.nome)}</div>
+    <div class="kv"><span>Materiali</span><b>${eur(c)}</b></div>
+    <div class="kv"><span>Prezzo</span><b>${eur(num(m.prezzo))}</b></div>
+    <div class="kv"><span>Ti resta</span><b class="${r>=0?'pos':'neg'}">${eur(r)}</b></div></div></button>`}).join('')}</div>`
+  :`<div class="empty-box" style="margin-top:16px">Non ci sono ancora borse.<br>Tocca <b>Nuovo modello</b> per aggiungere la prima.</div>`}`;
+}
+
+function vMateriali(){
+  const groups=TIPI.map(t=>[t,S.materiali.filter(m=>(m.tipo||'Altro')===t||(t==='Altro'&&!TIPI.includes(m.tipo))).sort(byName)]).filter(g=>g[1].length);
+  const spese=S.spese.slice().sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,8);
+  return `<div class="sec-head"><h2>Materiali</h2><p class="hint">Quello che compri, con il prezzo. Quando fai la spesa tocca <b>Ho comprato</b>.</p></div>
+  <button class="btn primary big" data-act="newMat">+ Nuovo materiale</button>
+  ${groups.length?groups.map(([t,ms])=>`<h3 class="group">${esc(t)}</h3><div class="list">${ms.map(m=>`<div class="row">
+     <button class="main" data-act="editMat" data-id="${esc(m.id)}"><span class="t">${esc(m.nome)}</span><span class="s">${eur(num(m.prezzo))} al ${esc(m.unita||'pezzo')}</span></button>
+     <button class="btn small" data-act="compra" data-id="${esc(m.id)}">Ho comprato</button></div>`).join('')}</div>`).join('')
+   :`<div class="empty-box" style="margin-top:16px">Nessun materiale. Aggiungi lana, manici, chiusure…</div>`}
+  <h3 class="group">Ultimi acquisti</h3>
+  ${spese.length?`<div class="list">${spese.map(s=>`<div class="row"><button class="main" data-act="editSpesa" data-id="${esc(s.id)}"><span class="t">${esc(s.nome)}</span><span class="s">${fd(s.data)} · ${fq(num(s.quantita))} ${esc(un(s.unita||'pezzo',num(s.quantita)))}</span></button><span class="amt">${eur(num(s.totale))}</span></div>`).join('')}</div>`
+   :`<p class="hint">Qui compariranno le cose che compri.</p>`}`;
+}
+
+function vVendite(){
+  const pr=S.lavori.filter(l=>l.stato!=='venduta').sort((a,b)=>(b.dataFine||'').localeCompare(a.dataFine||''));
+  const vd=S.lavori.filter(l=>l.stato==='venduta').sort((a,b)=>(b.dataVendita||'').localeCompare(a.dataVendita||''));
+  const L=UI.vend==='pronte'?pr:vd;
+  return `<div class="sec-head"><h2>Vendite</h2><p class="hint">Segna quando finisci una borsa e quando la vendi.</p></div>
+  <button class="btn primary big" data-act="finita">Ho finito una borsa</button>
+  <div class="seg" role="group"><button data-act="seg" data-v="pronte" aria-pressed="${UI.vend==='pronte'}">Da vendere (${pr.length})</button><button data-act="seg" data-v="vendute" aria-pressed="${UI.vend==='vendute'}">Vendute (${vd.length})</button></div>
+  ${L.length?`<div class="list">${L.map(l=>UI.vend==='pronte'
+    ?`<div class="row"><button class="main" data-act="editLav" data-id="${esc(l.id)}"><span class="t">${esc(l.nome)}</span><span class="s">Finita il ${fd(l.dataFine)} · prezzo ${eur(num(l.listino))}</span></button><button class="btn good small" data-act="vendi" data-id="${esc(l.id)}">Venduta</button></div>`
+    :`<div class="row"><button class="main" data-act="editLav" data-id="${esc(l.id)}"><span class="t">${esc(l.nome)}</span><span class="s">${fd(l.dataVendita)}${l.cliente?' · '+esc(l.cliente):''}</span></button><span class="amt">${eur(num(l.prezzo))}</span></div>`).join('')}</div>`
+  :`<div class="empty-box">${UI.vend==='pronte'?'Nessuna borsa in attesa di essere venduta.':'Nessuna vendita ancora. Quando vendi una borsa, tocca <b>Venduta</b>.'}</div>`}`;
+}
+
+function stats(){
+  const vend=S.lavori.filter(l=>l.stato==='venduta'&&inPer(l.dataVendita));
+  const inc=vend.reduce((t,l)=>t+num(l.prezzo),0);
+  const spe=S.spese.filter(s=>inPer(s.data)).reduce((t,s)=>t+num(s.totale),0);
+  const marg=vend.reduce((t,l)=>t+num(l.prezzo)-num(l.costo),0);
+  const ore=vend.reduce((t,l)=>t+num(l.ore),0);
+  const fin=S.lavori.filter(l=>inPer(l.dataFine)).length;
+  const pr=S.lavori.filter(l=>l.stato!=='venduta');
+  const rank={};vend.forEach(l=>{const k=l.modelloId||l.nome;const r=rank[k]||(rank[k]={nome:l.nome,n:0,inc:0,marg:0});r.n++;r.inc+=num(l.prezzo);r.marg+=num(l.prezzo)-num(l.costo)});
+  return {inc,spe,gua:inc-spe,marg,ore,fin,nv:vend.length,npr:pr.length,vpr:pr.reduce((t,l)=>t+num(l.listino),0),rank:Object.values(rank).sort((a,b)=>b.n-a.n||b.inc-a.inc)};
+}
+function months(){
+  const d=new Date();const out=[];
+  for(let i=5;i>=0;i--){const x=new Date(d.getFullYear(),d.getMonth()-i,1);const k=x.getFullYear()+'-'+pad(x.getMonth()+1);
+    out.push({k,lab:MESI[x.getMonth()],full:MESI[x.getMonth()]+' '+x.getFullYear(),
+      inc:S.lavori.filter(l=>l.stato==='venduta'&&(l.dataVendita||'').slice(0,7)===k).reduce((t,l)=>t+num(l.prezzo),0),
+      spe:S.spese.filter(s=>(s.data||'').slice(0,7)===k).reduce((t,s)=>t+num(s.totale),0)})}
+  return out;
+}
+function niceMax(v){if(v<=0)return 50;const p=Math.pow(10,Math.floor(Math.log10(v)));for(const m of [1,2,2.5,5,10]){if(m*p>=v)return m*p}return 10*p}
+function chartSVG(ms){
+  const W=600,H=230,pl=44,pr=8,pt=22,pb=30,ih=H-pt-pb,gw=(W-pl-pr)/ms.length;
+  const max=niceMax(Math.max(...ms.map(m=>Math.max(m.inc,m.spe))));
+  const y=v=>pt+ih-(v/max)*ih;const bw=Math.min(26,gw*.3);
+  const bar=(x,v,col)=>{if(v<=0)return'';const h=Math.max(2,(v/max)*ih),r=Math.min(4,h/2,bw/2),yy=pt+ih-h;
+    return `<path d="M${x},${pt+ih}V${yy+r}Q${x},${yy} ${x+r},${yy}H${x+bw-r}Q${x+bw},${yy} ${x+bw},${yy+r}V${pt+ih}Z" fill="${col}"/>`};
+  let g='';for(let i=0;i<=4;i++){const v=max*i/4,yy=y(v);g+=`<line x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="1"/><text x="${pl-8}" y="${yy+4}" text-anchor="end">${eur0(v).replace(/\s?€/,'')}</text>`}
+  let b='',hits='',lab='';
+  ms.forEach((m,i)=>{const cx=pl+gw*i+gw/2,x1=cx-bw-1,x2=cx+1;
+    hits+=`<rect class="hit" data-i="${i}" x="${pl+gw*i+2}" y="${pt-10}" width="${gw-4}" height="${ih+10}" rx="8"/>`;
+    b+=bar(x1,m.inc,'var(--inc)')+bar(x2,m.spe,'var(--spe)');
+    lab+=`<text x="${cx}" y="${H-8}" text-anchor="middle">${m.lab}</text>`;
+    if(i===ms.length-1){if(m.inc>0)lab+=`<text x="${x1+bw/2}" y="${y(m.inc)-6}" text-anchor="middle" style="fill:var(--ink-2);font-weight:700">${eur0(m.inc).replace(/\s?€/,'')}</text>`;
+      if(m.spe>0)lab+=`<text x="${x2+bw/2}" y="${y(m.spe)-6}" text-anchor="middle" style="fill:var(--ink-2);font-weight:700">${eur0(m.spe).replace(/\s?€/,'')}</text>`}
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Incassi e spese degli ultimi sei mesi">${g}${hits}<g style="pointer-events:none">${b}${lab}</g><line x1="${pl}" x2="${W-pr}" y1="${pt+ih}" y2="${pt+ih}" stroke="var(--muted)" stroke-width="1"/></svg>`;
+}
+let MS=[];
+function vConti(){
+  const s=stats();MS=months();
+  const perLab={mese:'questo mese',anno:'quest\'anno',sempre:'da sempre'}[UI.per];
+  const anyMonth=MS.some(m=>m.inc||m.spe);
+  return `<div class="sec-head"><h2>Conti</h2><p class="hint">Come sta andando il laboratorio.</p></div>
+  <div class="chips" role="group" style="margin-bottom:14px">${[['mese','Questo mese'],['anno','Quest\'anno'],['sempre','Sempre']].map(([k,l])=>`<button data-act="per" data-v="${k}" aria-pressed="${UI.per===k}">${l}</button>`).join('')}</div>
+  <div class="hero">
+    <div class="stat big"><div class="lab">Guadagno ${perLab}</div><div class="val ${s.gua>=0?'pos':'neg'}">${eur(s.gua)}</div><div class="foot">Incassato meno speso in materiali</div></div>
+    <div class="stat"><div class="lab">Incassato</div><div class="val">${eur(s.inc)}</div></div>
+    <div class="stat"><div class="lab">Speso</div><div class="val">${eur(s.spe)}</div></div>
+  </div>
+  <div class="tiles">
+    <div class="tile stat"><div class="lab">Finite</div><div class="val">${s.fin}</div></div>
+    <div class="tile stat"><div class="lab">Vendute</div><div class="val">${s.nv}</div></div>
+    <div class="tile stat"><div class="lab">Da vendere</div><div class="val">${s.npr}</div><div class="foot">${eur0(s.vpr)} di valore</div></div>
+  </div>
+  <div class="card">
+    <h3>Ultimi sei mesi</h3>
+    <div class="legend"><span><i style="background:var(--inc)"></i>Incassi</span><span><i style="background:var(--spe)"></i>Spese materiali</span></div>
+    ${anyMonth?(UI.table?`<div class="tbl-wrap"><table><thead><tr><th>Mese</th><th>Incassi</th><th>Spese</th><th>Differenza</th></tr></thead><tbody>${MS.map(m=>`<tr><td>${m.full}</td><td>${eur(m.inc)}</td><td>${eur(m.spe)}</td><td>${eur(m.inc-m.spe)}</td></tr>`).join('')}</tbody></table></div>`
+      :`<div class="chartbox" id="chart">${chartSVG(MS)}<div class="tip" id="tip" hidden></div></div>`)
+     :`<div class="empty-box">Il grafico si riempie quando segni acquisti e vendite.</div>`}
+    ${anyMonth?`<button class="linkbtn" data-act="table">${UI.table?'Mostra il grafico':'Mostra come tabella'}</button>`:''}
+  </div>
+  <div class="card">
+    <h3>Borse più vendute ${perLab}</h3>
+    ${s.rank.length?s.rank.slice(0,6).map(r=>`<div class="rank"><div class="top"><span>${esc(r.nome)}</span><span>${r.n} ${r.n===1?'venduta':'vendute'}</span></div><div class="s">Incassato ${eur(r.inc)} · resta in media ${eur(r.marg/r.n)} a borsa</div></div>`).join('')
+     :`<p class="hint">Ancora nessuna vendita in questo periodo.</p>`}
+    ${s.ore>0?`<p class="note" style="margin:12px 0 0">Sulle borse vendute restano in media <b>${eur(s.marg/s.ore)}</b> per ogni ora di lavoro, materiali già tolti.</p>`:''}
+  </div>
+  <div class="card">
+    <h3>Impostazioni</h3>
+    <div class="field" style="margin-top:12px"><label for="impNome">Nome del laboratorio</label><input class="in-text" id="impNome" value="${esc(S.imp.nome)}"></div>
+    <div class="field"><label for="impTar">Quanto vale un'ora di lavoro</label><div class="money"><span>€</span><input class="in-text" id="impTar" inputmode="decimal" value="${fq(num(S.imp.tariffa))}"></div><span class="help">Serve a calcolare il prezzo consigliato delle borse.</span></div>
+    <button class="btn primary" data-act="saveImp">Salva impostazioni</button>
+    <p class="note" style="margin:16px 0 10px">I dati sono salvati su questo telefono${syncUrl?' e copiati sul foglio Google':''}. Ogni tanto scarica una copia di sicurezza.</p>
+    <div class="actions"><button class="btn" data-act="export">Scarica copia di sicurezza</button><button class="btn" data-act="import">Carica una copia</button></div>
+    <div class="field" style="margin-top:20px"><label for="impSync">Collegamento al foglio Google</label><input class="in-text" id="impSync" value="${esc(syncUrl)}" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false"><span class="help">Lo imposta Federico. Le foto restano solo sul telefono.</span></div>
+    <div class="actions"><button class="btn" data-act="saveSync">${syncUrl?'Aggiorna collegamento':'Collega il foglio'}</button>${syncUrl?'<button class="btn ghost" data-act="syncNow">Aggiorna adesso</button>':''}</div>
+    <p class="sync ${syncState.cls}" id="syncLine">${esc(syncState.t)}</p>
+</div>
+  </div>`;
+}
+function wireChart(){
+  const box=$('#chart');if(!box)return;const tip=$('#tip');
+  const show=el=>{box.querySelectorAll('.hit').forEach(h=>h.classList.toggle('on',h===el));const m=MS[+el.dataset.i];
+    tip.innerHTML=`<b>${m.full}</b>Incassi ${eur(m.inc)}<br>Spese ${eur(m.spe)}`;tip.hidden=false;
+    const r=el.getBoundingClientRect(),br=box.getBoundingClientRect();let x=r.left-br.left+r.width/2;x=Math.max(70,Math.min(br.width-70,x));tip.style.left=x+'px';tip.style.top=(r.top-br.top+6)+'px'};
+  box.querySelectorAll('.hit').forEach(h=>{h.addEventListener('pointerenter',()=>show(h));h.addEventListener('click',()=>show(h))});
+  box.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'){tip.hidden=true;box.querySelectorAll('.hit').forEach(h=>h.classList.remove('on'))}});
+}
+
+/* ---------- sheet ---------- */
+function openSheet(html){$('#sheetBody').innerHTML='<div>'+html+'</div>';$('#sheetWrap').hidden=false;document.body.style.overflow='hidden';const f=$('#sheetBody h2');if(f){f.tabIndex=-1;f.focus()}}
+function closeSheet(){$('#sheetWrap').hidden=true;$('#sheetBody').innerHTML='';document.body.style.overflow='';draft=null}
+let tt=0;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(tt);tt=setTimeout(()=>el.hidden=true,2600)}
+const money=(id,v)=>`<div class="money"><span>€</span><input class="in-text" id="${id}" inputmode="decimal" value="${v===''?'':fq(num(v))}" placeholder="0,00"></div>`;
+const stepper=(key,v,step)=>`<div class="stepper"><button type="button" data-act="step" data-k="${key}" data-d="${-step}" aria-label="Meno">−</button><output>${fq(v)}</output><button type="button" data-act="step" data-k="${key}" data-d="${step}" aria-label="Più">+</button></div>`;
+const confirmBox=(msg,act,id)=>`<div class="confirm" id="cf" hidden><b>${msg}</b><button class="btn danger" data-act="${act}" data-id="${esc(id)}">Sì, elimina</button><button class="btn ghost" data-act="cfNo">No, tienila</button></div>`;
+
+/* --- model form --- */
+let draft=null;
+function modForm(){
+  const d=draft,c=draft.materiali.reduce((t,r)=>{const x=mat(r.id);return t+(x?num(x.prezzo)*num(r.qta):0)},0),sug=consigliato(c,d.ore);
+  const opts=sel=>S.materiali.slice().sort(byName).map(m=>`<option value="${esc(m.id)}" ${m.id===sel?'selected':''}>${esc(m.nome)}</option>`).join('');
+  openSheet(`<h2 id="sheetTitle">${d.isNew?'Nuovo modello':'Modifica borsa'}</h2>
+  <div class="field"><span class="lab">Foto</span><div class="photo-pick">${photo(d)}<div class="actions" style="margin:0"><button class="btn small" data-act="pickFoto">${d.foto?'Cambia foto':'Aggiungi foto'}</button>${d.foto?'<button class="btn small ghost" data-act="noFoto">Togli foto</button>':''}</div></div></div>
+  <div class="field"><label for="fNome">Nome della borsa</label><input class="in-text" id="fNome" value="${esc(d.nome)}" placeholder="Es. Secchiello rosso"></div>
+  <div class="field"><span class="lab">Materiali usati per una borsa</span>
+    <div class="list">${d.materiali.map((r,i)=>{const x=mat(r.id);return `<div class="matrow"><div class="line1"><select class="in-text" data-mi="${i}" aria-label="Materiale">${opts(r.id)}</select><button class="x" data-act="rmRow" data-i="${i}" aria-label="Togli">×</button></div>
+      <div class="line2">${stepper('m'+i,num(r.qta),x&&(x.unita==='confezione'||x.unita==='metro')?.1:.5)}<span class="sub">${x?esc(un(x.unita,num(r.qta)))+' · '+eur(num(x.prezzo)*num(r.qta)):''}</span></div></div>`}).join('')}</div>
+    ${S.materiali.length?`<button class="btn small" data-act="addRow" style="align-self:flex-start;margin-top:4px">+ Aggiungi materiale</button>`:`<span class="help">Prima aggiungi i materiali nella sezione Materiali.</span>`}
+  </div>
+  <div class="field"><span class="lab">Ore di lavoro</span>${stepper('ore',num(d.ore),1)}</div>
+  <div class="calc"><div class="kv"><span>Costo materiali</span><b>${eur(c)}</b></div><div class="kv"><span>Prezzo consigliato</span><b>${eur(sug)}</b></div>
+    ${sug>0?`<button class="btn small" data-act="useSug" data-v="${sug}" style="align-self:flex-start">Usa ${eur0(sug)}</button>`:''}<span class="help">Materiali + ${fq(num(d.ore))} ore a ${eur(num(S.imp.tariffa))}, arrotondato.</span></div>
+  <div class="field"><label for="fPrezzo">Prezzo di vendita</label>${money('fPrezzo',d.prezzo)}</div>
+  <div class="field"><label for="fNote">Note</label><textarea class="in-text" id="fNote" placeholder="Colori, misure, punto usato…">${esc(d.note)}</textarea></div>
+  <div class="actions"><button class="btn primary big" data-act="saveMod">Salva</button><button class="btn ghost" data-act="close">Annulla</button>
+  ${d.isNew?'':`<button class="btn danger" data-act="cfAsk">Elimina questa borsa</button>${confirmBox('Eliminare questo modello?','delMod',d.id)}`}</div>`);
+}
+function readMod(){if(!draft)return;const g=id=>document.getElementById(id);
+  if(g('fNome'))draft.nome=g('fNome').value;if(g('fPrezzo'))draft.prezzo=g('fPrezzo').value;if(g('fNote'))draft.note=g('fNote').value;
+  document.querySelectorAll('select[data-mi]').forEach(s=>{draft.materiali[+s.dataset.mi].id=s.value})}
+function reMod(){const sc=$('.sheet').scrollTop;modForm();$('.sheet').scrollTop=sc}
+
+/* --- material form --- */
+function matForm(m){
+  draft={kind:'mat',isNew:!m,id:m?m.id:uid('mat'),nome:m?m.nome:'',tipo:m?m.tipo:'Filato',unita:m?m.unita:'gomitolo',prezzo:m?m.prezzo:''};drawMat();
+}
+function drawMat(){const d=draft;
+  openSheet(`<h2 id="sheetTitle">${d.isNew?'Nuovo materiale':'Modifica materiale'}</h2>
+  <div class="field"><label for="fNome">Nome</label><input class="in-text" id="fNome" value="${esc(d.nome)}" placeholder="Es. Fettuccia rosa"></div>
+  <div class="field"><span class="lab">Che cos'è</span><div class="chips">${TIPI.map(t=>`<button type="button" data-act="pickTipo" data-v="${t}" aria-pressed="${d.tipo===t}">${t}</button>`).join('')}</div></div>
+  <div class="field"><span class="lab">Si compra a</span><div class="chips">${UNITA.map(u=>`<button type="button" data-act="pickUn" data-v="${u}" aria-pressed="${d.unita===u}">${u}</button>`).join('')}</div></div>
+  <div class="field"><label for="fPrezzo">Prezzo per ${esc(d.unita)}</label>${money('fPrezzo',d.prezzo)}</div>
+  <div class="actions"><button class="btn primary big" data-act="saveMat">Salva</button><button class="btn ghost" data-act="close">Annulla</button>
+  ${d.isNew?'':`<button class="btn danger" data-act="cfAsk">Elimina materiale</button>${confirmBox('Eliminare questo materiale? Sparirà anche dalle borse che lo usano.','delMat',d.id)}`}</div>`)}
+function readMat(){const g=id=>document.getElementById(id);if(g('fNome'))draft.nome=g('fNome').value;if(g('fPrezzo'))draft.prezzo=g('fPrezzo').value}
+
+/* --- purchase --- */
+function compraForm(m,sp){
+  draft={kind:'spesa',isNew:!sp,id:sp?sp.id:uid('sp'),matId:m?m.id:sp.materialeId,nome:m?m.nome:sp.nome,unita:m?m.unita:sp.unita,q:sp?num(sp.quantita):1,
+    tot:sp?num(sp.totale):(m?num(m.prezzo):0),data:sp?sp.data:today(),agg:!sp,totTouched:!!sp};drawCompra();
+}
+function drawCompra(){const d=draft;
+  openSheet(`<h2 id="sheetTitle">${d.isNew?'Ho comprato':'Acquisto'}</h2>
+  <p class="hint" style="margin:-6px 0 16px;font-size:1.05rem"><b style="color:var(--ink)">${esc(d.nome)}</b></p>
+  <div class="field"><span class="lab">Quanti ${esc(PLURALI[d.unita]||d.unita)}</span>${stepper('q',d.q,1)}</div>
+  <div class="field"><label for="fTot">Quanto hai speso in tutto</label>${money('fTot',d.tot)}</div>
+  <div class="field"><label for="fData">Quando</label><input class="in-text" type="date" id="fData" value="${esc(d.data)}"></div>
+  ${d.isNew?`<label class="check"><input type="checkbox" id="fAgg" ${d.agg?'checked':''}> Aggiorna anche il prezzo in elenco</label>`:''}
+  <div class="actions"><button class="btn primary big" data-act="saveSpesa">Salva acquisto</button><button class="btn ghost" data-act="close">Annulla</button>
+  ${d.isNew?'':`<button class="btn danger" data-act="cfAsk">Elimina acquisto</button>${confirmBox('Eliminare questo acquisto?','delSpesa',d.id)}`}</div>`)}
+function readCompra(){const g=id=>document.getElementById(id);if(g('fTot'))draft.tot=num(g('fTot').value);if(g('fData'))draft.data=g('fData').value||today();if(g('fAgg'))draft.agg=g('fAgg').checked}
+
+/* --- finished bag --- */
+function finitaForm(){
+  const list=S.modelli.slice().sort(byName);
+  openSheet(`<h2 id="sheetTitle">Quale borsa hai finito?</h2>
+  ${list.length?`<div class="pick-list">${list.map(m=>`<button class="pick" data-act="pickFinita" data-id="${esc(m.id)}">${photo(m)}<span class="mbody"><span class="mname">${esc(m.nome)}</span><span class="hint">Prezzo ${eur(num(m.prezzo))}</span></span></button>`).join('')}</div>`
+   :`<div class="empty-box">Prima aggiungi un modello nella sezione Borse.</div>`}
+  <div class="actions"><button class="btn ghost" data-act="close">Annulla</button></div>`);
+}
+function vendiForm(l){
+  draft={kind:'vendi',id:l.id};
+  openSheet(`<h2 id="sheetTitle">Venduta!</h2>
+  <p class="hint" style="margin:-6px 0 16px;font-size:1.05rem"><b style="color:var(--ink)">${esc(l.nome)}</b></p>
+  <div class="field"><label for="fPrezzo">A quanto l'hai venduta</label>${money('fPrezzo',l.listino)}</div>
+  <div class="field"><label for="fCli">A chi (se vuoi)</label><input class="in-text" id="fCli" placeholder="Es. Signora del mercato"></div>
+  <div class="field"><label for="fData">Quando</label><input class="in-text" type="date" id="fData" value="${today()}"></div>
+  <div class="actions"><button class="btn good big" data-act="saveVendi">Segna come venduta</button><button class="btn ghost" data-act="close">Annulla</button></div>`);
+}
+function lavForm(l){
+  draft={kind:'lav',id:l.id};const sold=l.stato==='venduta';
+  openSheet(`<h2 id="sheetTitle">${esc(l.nome)}</h2>
+  <p style="margin:-6px 0 16px"><span class="chip ${sold?'sold':'ready'}">${sold?'Venduta':'Da vendere'}</span></p>
+  <div class="field"><label for="fFine">Finita il</label><input class="in-text" type="date" id="fFine" value="${esc(l.dataFine||'')}"></div>
+  ${sold?`<div class="field"><label for="fPrezzo">Venduta a</label>${money('fPrezzo',l.prezzo)}</div>
+  <div class="field"><label for="fCli">A chi</label><input class="in-text" id="fCli" value="${esc(l.cliente||'')}"></div>
+  <div class="field"><label for="fData">Venduta il</label><input class="in-text" type="date" id="fData" value="${esc(l.dataVendita||'')}"></div>`
+  :`<div class="field"><label for="fList">Prezzo</label>${money('fList',l.listino)}</div>`}
+  <div class="actions"><button class="btn primary big" data-act="saveLav">Salva</button>
+  ${sold?`<button class="btn" data-act="unsell">Non è più venduta</button>`:`<button class="btn good" data-act="vendi" data-id="${esc(l.id)}">Venduta</button>`}
+  <button class="btn ghost" data-act="close">Annulla</button>
+  <button class="btn danger" data-act="cfAsk">Elimina</button>${confirmBox('Eliminare questa borsa dall\'elenco?','delLav',l.id)}</div>`);
+}
+
+/* ---------- photo ---------- */
+function shrink(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();
+  img.onload=()=>{const M=480,s=Math.min(1,M/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',.72))};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej()};img.src=url})}
+$('#fileFoto').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f||!draft)return;
+  try{readMod();draft.foto=await shrink(f);reMod()}catch(err){toast('Non riesco ad aprire questa foto')}});
+
+/* ---------- backup ---------- */
+$('#fileImport').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  let d;try{d=JSON.parse(await f.text())}catch(err){toast('Questo file non è una copia valida');return}
+  if(!d||!COLLS.some(c=>Array.isArray(d[c]))){toast('Questo file non è una copia valida');return}
+  openSheet(`<h2 id="sheetTitle">Caricare la copia?</h2><p>Aggiunge e aggiorna borse, materiali, acquisti e vendite contenuti nel file. Le voci che hai già e non sono nel file restano.</p>
+  <div class="actions"><button class="btn primary big" data-act="doImport">Sì, carica</button><button class="btn ghost" data-act="close">Annulla</button></div>`);
+  pendingImport=d;});
+let pendingImport=null;
+async function doImport(){const d=pendingImport;pendingImport=null;closeSheet();toast('Sto caricando…');
+  for(const c of COLLS){if(!Array.isArray(d[c]))continue;for(const o of d[c]){if(o&&o.id)await put(c,o,true)}}
+  if(d.imp)await putImp(d.imp);render();toast('Copia caricata')}
+
+/* ---------- actions ---------- */
+document.addEventListener('click',async e=>{
+  const tb=e.target.closest('.tabs button');
+  if(tb){UI.tab=tb.dataset.tab;try{sessionStorage.setItem('bm-tab',UI.tab)}catch(x){}render();window.scrollTo(0,0);return}
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id;
+  switch(a){
+  case 'close':closeSheet();break;
+  case 'cfAsk':{const c=$('#cf');c.hidden=false;b.hidden=true;c.scrollIntoView({block:'nearest',behavior:'smooth'});break}
+  case 'cfNo':{$('#cf').hidden=true;const k=document.querySelector('[data-act="cfAsk"]');if(k)k.hidden=false;break}
+  case 'seg':UI.vend=b.dataset.v;render();break;
+  case 'per':UI.per=b.dataset.v;render();break;
+  case 'table':UI.table=!UI.table;render();break;
+  /* models */
+  case 'newMod':draft={kind:'mod',isNew:true,id:uid('mod'),nome:'',foto:'',ore:4,prezzo:'',note:'',materiali:[]};modForm();break;
+  case 'editMod':{const m=mod(id);if(!m)return;draft=Object.assign({kind:'mod',isNew:false},JSON.parse(JSON.stringify(m)));draft.materiali=draft.materiali||[];modForm();break}
+  case 'addRow':{readMod();const used=new Set(draft.materiali.map(r=>r.id));const f=S.materiali.slice().sort(byName).find(m=>!used.has(m.id))||S.materiali[0];draft.materiali.push({id:f.id,qta:1});reMod();break}
+  case 'rmRow':readMod();draft.materiali.splice(+b.dataset.i,1);reMod();break;
+  case 'step':{const k=b.dataset.k,dl=num(b.dataset.d);
+    if(draft.kind==='mod'){readMod();if(k==='ore')draft.ore=Math.max(0,num(draft.ore)+dl);else{const r=draft.materiali[+k.slice(1)];r.qta=Math.max(0,Math.round((num(r.qta)+dl)*100)/100)}reMod()}
+    else if(draft.kind==='spesa'){readCompra();const m=mat(draft.matId);const oldQ=draft.q;draft.q=Math.max(1,draft.q+dl);
+      if(m&&Math.abs(draft.tot-num(m.prezzo)*oldQ)<.005)draft.tot=Math.round(num(m.prezzo)*draft.q*100)/100;drawCompra()}
+    break}
+  case 'useSug':readMod();draft.prezzo=num(b.dataset.v);reMod();break;
+  case 'pickFoto':readMod();$('#fileFoto').click();break;
+  case 'noFoto':readMod();draft.foto='';reMod();break;
+  case 'saveMod':{readMod();const d=draft;if(!d.nome.trim()){toast('Scrivi il nome della borsa');$('#fNome').focus();return}
+    const o={id:d.id,nome:d.nome.trim(),foto:d.foto||'',ore:num(d.ore),prezzo:num(d.prezzo),note:d.note||'',materiali:d.materiali.filter(r=>num(r.qta)>0).map(r=>({id:r.id,qta:num(r.qta)}))};
+    closeSheet();await put('modelli',o);toast('Borsa salvata');break}
+  case 'delMod':closeSheet();await del('modelli',id);toast('Borsa eliminata');break;
+  /* materials */
+  case 'newMat':matForm(null);break;
+  case 'editMat':matForm(mat(id));break;
+  case 'pickTipo':readMat();draft.tipo=b.dataset.v;drawMat();break;
+  case 'pickUn':readMat();draft.unita=b.dataset.v;drawMat();break;
+  case 'saveMat':{readMat();const d=draft;if(!d.nome.trim()){toast('Scrivi il nome del materiale');return}
+    closeSheet();await put('materiali',{id:d.id,nome:d.nome.trim(),tipo:d.tipo,unita:d.unita,prezzo:num(d.prezzo)});toast('Materiale salvato');break}
+  case 'delMat':{closeSheet();await del('materiali',id);
+    for(const m of S.modelli.filter(m=>(m.materiali||[]).some(r=>r.id===id))){await put('modelli',Object.assign({},m,{materiali:m.materiali.filter(r=>r.id!==id)}),true)}
+    render();toast('Materiale eliminato');break}
+  case 'compra':compraForm(mat(id),null);break;
+  case 'editSpesa':{const s=S.spese.find(x=>x.id===id);if(s)compraForm(null,s);break}
+  case 'saveSpesa':{readCompra();const d=draft;if(d.tot<=0){toast('Scrivi quanto hai speso');return}
+    const o={id:d.id,materialeId:d.matId,nome:d.nome,unita:d.unita,quantita:d.q,totale:Math.round(d.tot*100)/100,data:d.data};
+    const m=mat(d.matId),agg=d.isNew&&d.agg;closeSheet();await put('spese',o);
+    if(agg&&m){const p=Math.round(d.tot/d.q*100)/100;if(Math.abs(p-num(m.prezzo))>=.01)await put('materiali',Object.assign({},m,{prezzo:p}))}
+    toast('Acquisto segnato');break}
+  case 'delSpesa':closeSheet();await del('spese',id);toast('Acquisto eliminato');break;
+  /* bags made / sold */
+  case 'finita':finitaForm();break;
+  case 'pickFinita':{const m=mod(id);if(!m)return;closeSheet();
+    await put('lavori',{id:uid('lav'),modelloId:m.id,nome:m.nome,costo:Math.round(costo(m)*100)/100,ore:num(m.ore),listino:num(m.prezzo),stato:'pronta',dataFine:today(),prezzo:0,dataVendita:'',cliente:''});
+    UI.vend='pronte';render();toast('Brava! Borsa aggiunta a «Da vendere»');break}
+  case 'vendi':{const l=S.lavori.find(x=>x.id===id);if(l)vendiForm(l);break}
+  case 'saveVendi':{const l=S.lavori.find(x=>x.id===draft.id);if(!l)return;const p=num($('#fPrezzo').value);if(p<=0){toast('Scrivi il prezzo di vendita');return}
+    const o=Object.assign({},l,{stato:'venduta',prezzo:p,cliente:$('#fCli').value.trim(),dataVendita:$('#fData').value||today()});closeSheet();await put('lavori',o);toast('Vendita segnata');break}
+  case 'editLav':{const l=S.lavori.find(x=>x.id===id);if(l)lavForm(l);break}
+  case 'saveLav':{const l=S.lavori.find(x=>x.id===draft.id);if(!l)return;const g=i=>document.getElementById(i);const o=Object.assign({},l,{dataFine:g('fFine').value||l.dataFine});
+    if(l.stato==='venduta'){o.prezzo=num(g('fPrezzo').value);o.cliente=g('fCli').value.trim();o.dataVendita=g('fData').value||l.dataVendita}else o.listino=num(g('fList').value);
+    closeSheet();await put('lavori',o);toast('Salvato');break}
+  case 'unsell':{const l=S.lavori.find(x=>x.id===draft.id);if(!l)return;closeSheet();await put('lavori',Object.assign({},l,{stato:'pronta',prezzo:0,cliente:'',dataVendita:''}));toast('Tornata tra le borse da vendere');break}
+  case 'delLav':closeSheet();await del('lavori',id);toast('Eliminata');break;
+  /* settings */
+  case 'saveImp':await putImp({nome:$('#impNome').value.trim()||'Le borse della mamma',tariffa:num($('#impTar').value)});toast('Impostazioni salvate');break;
+  case 'export':{const data=JSON.stringify(snapshot(false));const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+    const l=document.createElement('a');l.href=url;l.download='borse-copia-'+today()+'.json';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Copia scaricata');break}
+  case 'saveSync':{const v=$('#impSync').value.trim();
+    if(v&&!/^https:\/\/script\.google(usercontent)?\.com\//.test(v)){toast('Questo non sembra un indirizzo di Apps Script');return}
+    syncUrl=v;try{localStorage.setItem(SK,v)}catch(e){}
+    if(v){setSync('Mi collego al foglio…','');render();await pull()}else{setSync('','');render()}break}
+  case 'syncNow':setSync('Aggiorno…','');await pull();await push();break;
+case 'import':$('#fileImport').click();break;
+  case 'doImport':doImport();break;
+  }
+});
+document.addEventListener('change',e=>{
+  if(e.target.matches('select[data-mi]')&&draft&&draft.kind==='mod'){readMod();reMod()}
+  if(e.target.id==='fTot'&&draft&&draft.kind==='spesa'){draft.totTouched=true}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheetWrap').hidden)closeSheet()});
+
+boot();
+})();
+</script>
+</body>
+</html>

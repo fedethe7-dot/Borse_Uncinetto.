@@ -1,0 +1,16 @@
+{
+  "name": "Le borse della mamma",
+  "short_name": "Borse",
+  "description": "Modelli, materiali, vendite e conti delle borse all'uncinetto",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F2F6",
+  "theme_color": "#8E2F5E",
+  "lang": "it",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
